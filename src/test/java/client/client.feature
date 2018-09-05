@@ -38,7 +38,16 @@ Scenario: create cats and validate the results
     Given path "cats", id
     When method get
     Then status 200
+    And match header Content-Type == 'application/json'
     And match response == { id: '#(id)', name: 'Bob' }
+
+    Given path "cats", id
+    And header Accept = 'text/xml'
+    When method get
+    Then status 200
+    And match header Content-Type == 'text/xml'
+    And match response /cat/id == '#uuid'
+    And match response /cat/name == 'Bob'
 
     Given path "cats"
     When method get

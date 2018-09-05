@@ -33,10 +33,19 @@ Scenario: pathMatches('/cats')
     * def response = $cats.*
 
 # ----------------------------------------------------------------------------
+Scenario: pathMatches('/cats/{id}') && acceptContains('text/xml')
+# ----------------------------------------------------------------------------
+    * def result = cats[pathParams.id]
+    * eval if(!result) abortWithStatus(404)
+    * def responseHeaders = { 'Content-Type': 'text/xml' }
+    * def response = <cat><id>#(result.id)</id><name>#(result.name)</name></cat>
+
+# ----------------------------------------------------------------------------
 Scenario: pathMatches('/cats/{id}')
 # ----------------------------------------------------------------------------
     * def result = cats[pathParams.id]
     * eval if(!result) abortWithStatus(404)
+    * def responseHeaders = { 'Content-Type': 'application/json' }
     * def response = result
 
 # ----------------------------------------------------------------------------
